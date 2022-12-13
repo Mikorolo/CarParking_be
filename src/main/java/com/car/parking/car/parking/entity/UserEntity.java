@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +39,13 @@ public class UserEntity {
     private String lastname;
 
     private String carBrand;
+
+    private Boolean isReserved = false;
+
+    private Long spotNumber;
+
+    @NotEmpty
+    private String plateNumber;
 
     @Lob
     @JsonIgnore

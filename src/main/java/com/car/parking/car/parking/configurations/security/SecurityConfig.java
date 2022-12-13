@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers("/auth/**", "/userPhoto/**").permitAll()
+                .antMatchers("/auth/**", "/userPhoto/**", "/h2/**").permitAll()
                 .antMatchers("/**").hasRole("USER")
                 .and()
                 .userDetailsService(uds)
@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+        http.headers().frameOptions().disable();
     }
 
     @Bean

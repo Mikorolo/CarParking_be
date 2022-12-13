@@ -1,7 +1,6 @@
 package com.car.parking.car.parking.application.user.exception.advice;
 
-import com.car.parking.car.parking.application.user.exception.LoginException;
-import com.car.parking.car.parking.application.user.exception.UserDetailsException;
+import com.car.parking.car.parking.application.user.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,7 +14,11 @@ public class UserAdvice {
     @ResponseBody
     @ExceptionHandler(value = {
             LoginException.class,
-            UserDetailsException.class
+            UserDetailsException.class,
+            UserExistsException.class,
+            PlateNumberExistsException.class,
+            AlreadyReservedException.class,
+            CancelReservationException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String conflictAdvice(RuntimeException ex) {

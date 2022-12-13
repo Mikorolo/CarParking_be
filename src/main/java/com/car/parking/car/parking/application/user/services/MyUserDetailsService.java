@@ -51,7 +51,6 @@ public class MyUserDetailsService implements UserDetailsService {
     }
 
     public byte[] getUserPhoto(String userEmail) {
-        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userRepo.findByEmail(userEmail).get().getPhoto();
     }
 }

@@ -1,6 +1,7 @@
 package com.car.parking.car.parking.application.parkingspot.client;
 
 import com.car.parking.car.parking.application.parkingspot.dto.MakeReservationDTO;
+import com.car.parking.car.parking.application.parkingspot.dto.OccupySpotDto;
 import com.car.parking.car.parking.application.parkingspot.dto.ParkingSpotDTO;
 import com.car.parking.car.parking.application.parkingspot.dto.UpdateParkingSpotDTO;
 import com.car.parking.car.parking.application.parkingspot.repository.ParkingSpotRepositoryPort;
@@ -13,16 +14,21 @@ import com.car.parking.car.parking.entity.ParkingSpotEntity;
 import com.car.parking.car.parking.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.websocket.server.PathParam;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -53,6 +59,37 @@ public class ParkingSpotController {
         UserEntity userEntity = userRepo.findByEmail(authentication.getPrincipal().toString()).get();
 
         userRepo.save(UserEntity.of(updateUserDto, userEntity));
+    }
+
+    @PostMapping("/testExternal")
+    public String testExternal() {
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        Map<String, String> map = new HashMap<>();
+        map.put("Content-Type", "application/json");
+
+        headers.setAll(map);
+
+        Map req_payload = new HashMap<>();
+        req_payload.put("floor", 1);
+        req_payload.put("sector", "A1");
+
+        HttpEntity<?> request = new HttpEntity<>(req_payload, headers);
+        String url = "http://192.168.137.153:8080/addReservation";
+
+        new RestTemplate().postForEntity(url, request, String.class);
+
+        return "Done";
+    }
+
+    @GetMapping("/test")
+    public String callGet() {
+        RestTemplate rest = new RestTemplate();
+        ResponseEntity<String> exchange = rest.exchange(
+                "https://dummyjson.com/products",
+                HttpMethod.GET,
+                HttpEntity.EMPTY,
+                String.class);
+        return exchange.getBody();
     }
 
     @PatchMapping("/updatePhoto")
@@ -88,6 +125,21 @@ public class ParkingSpotController {
     @PatchMapping("/MakeReservation")
     public ParkingSpotEntity makeReservation(@RequestBody MakeReservationDTO makeReservationDTO) {
         return parkingSpotService.makeReservation(makeReservationDTO);
+    }
+
+    @PatchMapping("/MakeAutomaticReservation")
+    public ParkingSpotEntity makeAutomaticReservation() {
+        return parkingSpotService.makeAutomaticReservation();
+    }
+
+    @PatchMapping("/OccupySpot")
+    public ParkingSpotEntity occupySpot(@RequestParam Long id) {
+        return parkingSpotService.occupySpot(id);
+    }
+
+    @PatchMapping("/CancelReservation")
+    public ParkingSpotEntity cancelReservation(@RequestBody MakeReservationDTO makeReservationDTO) {
+        return parkingSpotService.cancelReservation(makeReservationDTO);
     }
 
     @DeleteMapping("/DeleteParkingSpot")

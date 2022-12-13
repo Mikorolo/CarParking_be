@@ -4,6 +4,8 @@ import com.car.parking.car.parking.application.parkingspot.enums.Status;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -22,7 +24,13 @@ public class ParkingSpotEntity {
     @Column
     private Integer floor;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
+
+    @Column
+    private String userEmail;
+
+    @Column
+    private LocalDateTime reservationDate;
 }
