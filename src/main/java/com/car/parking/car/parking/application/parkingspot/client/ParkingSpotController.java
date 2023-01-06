@@ -85,7 +85,7 @@ public class ParkingSpotController {
     public String callGet() {
         RestTemplate rest = new RestTemplate();
         ResponseEntity<String> exchange = rest.exchange(
-                "https://dummyjson.com/products",
+                "http://192.168.137.153:8080/led/light",
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
                 String.class);

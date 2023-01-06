@@ -57,6 +57,12 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    public UserEntity(String email, String password, String plateNumber) {
+        this.email = email;
+        this.password = password;
+        this.plateNumber = plateNumber;
+    }
+
     public static UserEntity of(UpdateUserDto updateUserDto, UserEntity userEntity) {
         userEntity.setUsername(updateUserDto.getUsername());
         userEntity.setName(updateUserDto.getName());

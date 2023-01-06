@@ -33,4 +33,10 @@ public class ParkingSpotEntity {
 
     @Column
     private LocalDateTime reservationDate;
+
+    public ParkingSpotEntity(Integer floor, String sector, Status status) {
+        this.floor = floor;
+        this.sector = sector;
+        this.status = status;
+    }
 }
